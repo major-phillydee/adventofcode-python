@@ -2,8 +2,14 @@ def main():
     with open('input.txt', 'r') as f:
         lines = [line.strip() for line in f]
 
-    # Get list of numbers on each line of the file
     numbers = []
+
+    line_len = len(lines[0])
+    lines.insert(0, str("." * (line_len + 2)))
+    lines.append(str("." * (line_len + 2)))
+
+    for line in lines:
+        line = "." + line + "."
 
     for index, line in enumerate(lines):
         start_index = -1
@@ -34,9 +40,8 @@ def main():
             if is_valid_part(num, lines):
                 parts_sum = parts_sum + num['value']
 
-    print(numbers[-1][-1])
-
     print('Valid parts sum = ' + str(parts_sum))
+
     return parts_sum
 
 
@@ -45,62 +50,49 @@ def is_valid_part(number, lines):
     length = number['len']
     start_idx = number['start_idx']
 
-    # Line above
-    if line_nr > 0:
-        string_above = lines[line_nr - 1]
-
-        # Get fragment of string above
-        if start_idx > 0:
-            string_above = string_above[start_idx - 1:start_idx + length + 1]
-        else:
-            string_above = string_above[start_idx:start_idx + length + 1]
-
-        print('line above = ' + string_above)
-
-        # Test for a symbol in a string
-        if has_symbol(string_above):
-            print('has symbol above: True')
-            return True
+    # Get fragment of string above
+    string_above = lines[line_nr - 1][start_idx - 1:start_idx + length + 1]
 
     # The same line
     line = lines[line_nr]
-    if start_idx > 0:
-        left_side = line[start_idx - 1:start_idx]
-        print('left side = ' + left_side)
-        if has_symbol(left_side):
-            print('has symbol on the left: True')
-            return True
+    left_side = line[start_idx - 1:start_idx]
+    right_side = line[start_idx + length:start_idx + length + 1]
 
-    if start_idx < len(line) - length:
-        right_side = line[start_idx + length:start_idx + length + 1]
-        print('Right side = ' + right_side)
-        if has_symbol(right_side):
-            print('has symbol on the right: True')
-            return True
+    string_below = lines[line_nr + 1][start_idx - 1:start_idx + length + 1]
 
-    # Below line
-    if line_nr < len(lines) - 1:
-        string_below = lines[line_nr + 1]
+    print('above: ' + string_above)
+    print('mid  : ' + left_side + str(number['value']) + right_side)
+    print('below: ' + string_below)
+    print('num  : ' + str(number))
 
-        # Get fragment of string Below
-        if start_idx > 0:
-            string_below = string_below[start_idx - 1:start_idx + length + 1]
-        else:
-            string_below = string_below[start_idx:start_idx + length + 1]
+    # Test for a symbol in a string
+    if has_symbol(string_above):
+        # print('has symbol above: True')
+        return True
 
-        print('line below = ' + string_below)
+    # print('left side = ' + left_side)
+    if has_symbol(left_side):
+        # print('has symbol on the left: True')
+        return True
 
-        # Test for a symbol in a string below
-        if has_symbol(string_below):
-            print('has symbol below: True')
-            return True
+    # print('Right side = ' + right_side)
+    if has_symbol(right_side):
+        # print('has symbol on the right: True')
+        return True
+
+    # Test for a symbol in a string below
+    if has_symbol(string_below):
+        # print('has symbol below: True')
+        return True
+
+    print('NOT valid part\n\n')
 
     return False
 
 
 def has_symbol(string):
     no_dots = [i for i in string if i != '.' and not i.isnumeric()]
-    return len(no_dots) != 0
+    return len(no_dots) > 0
 
 
 main()
