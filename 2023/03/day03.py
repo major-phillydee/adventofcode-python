@@ -71,7 +71,7 @@ def is_valid_part(number, lines):
             print('has symbol on the left: True')
             return True
 
-    if start_idx < len(line) - 1 - length:
+    if start_idx < len(line) - length:
         right_side = line[start_idx + length:start_idx + length + 1]
         print('Right side = ' + right_side)
         if has_symbol(right_side):
@@ -94,6 +94,8 @@ def is_valid_part(number, lines):
         if has_symbol(string_below):
             print('has symbol below: True')
             return True
+
+    return False
 
 
 def has_symbol(string):
