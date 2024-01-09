@@ -91,8 +91,10 @@ def is_valid_part(number, lines):
 
 
 def has_symbol(string):
-    no_dots = [i for i in string if i != '.' and not i.isnumeric()]
-    return len(no_dots) > 0
+    for ch in string:
+        if not ch.isnumeric() and ch != '.':
+            return True
+    return False
 
 
 main()
