@@ -1,0 +1,50 @@
+def part1():
+    with open('input.txt', 'r') as f:
+        lines = [line.strip() for line in f]
+
+    # Parse stacks
+    stack_lines = lines[0:9]
+    CRATE_COLUMNS_INDEX = 8
+
+    # Get create columns indexe
+    crate_indexes = []
+    for index, ch in enumerate(stack_lines[CRATE_COLUMNS_INDEX]):
+        if ch.isnumeric():
+            crate_indexes.append(index)
+
+    # Fill column stacks
+    stacks = []
+    for column in crate_indexes:
+        column_stack = []
+        for line in reversed(stack_lines[0:8]):
+            if column + 1 > len(line):
+                continue
+            if not line[column + 1].isalpha():
+                continue
+            column_stack.append(line[column + 1])
+
+        stacks.append(column_stack)
+
+    # Parse move instructions
+    instructions = lines[10:]
+
+    for instruction in instructions:
+        how_many = int(instruction.split()[1])
+
+        source = instruction.split()[3]
+        source_idx = int(source) - 1
+
+        destination = instruction.split()[5]
+        destination_idx = int(destination) - 1
+
+        for i in range(how_many):
+            stacks[destination_idx].append(stacks[source_idx].pop())
+
+    # Generate string of last item on every stack
+    output = ''.join([item[-1] for item in stacks])
+
+    return output
+
+
+if __name__ == "__main__":
+    print(part1())
