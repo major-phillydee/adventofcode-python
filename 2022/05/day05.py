@@ -1,4 +1,4 @@
-def part1():
+def main(part_no):
     with open('input.txt', 'r') as f:
         lines = [line.strip() for line in f]
 
@@ -37,8 +37,16 @@ def part1():
         destination = instruction.split()[5]
         destination_idx = int(destination) - 1
 
-        for i in range(how_many):
-            stacks[destination_idx].append(stacks[source_idx].pop())
+        if part_no == 1:
+            # part 1
+            for i in range(how_many):
+                stacks[destination_idx].append(stacks[source_idx].pop())
+
+        elif part_no == 2:
+            # part 2
+            current_load = stacks[source_idx][-how_many:]
+            stacks[source_idx] = stacks[source_idx][0:-how_many]
+            stacks[destination_idx] += current_load
 
     # Generate string of last item on every stack
     output = ''.join([item[-1] for item in stacks])
@@ -47,4 +55,5 @@ def part1():
 
 
 if __name__ == "__main__":
-    print(part1())
+    print(f'Part 1: {main(1)}')
+    print(f'Part 2: {main(2)}')
