@@ -5,7 +5,7 @@ def main():
     visible_count = 0
 
     # Count edge trees
-    edge_trees = len(lines[0]) + len(lines[-1]) + 2 * len(lines)
+    edge_trees = len(lines[0]) + len(lines[-1]) + 2 * (len(lines) - 2)
     visible_count += edge_trees
 
     visible_trees_left = 0
@@ -23,21 +23,44 @@ def main():
                 # Edge left and right tree
                 continue
 
-            if visible_left(idx, line):
-                visible_trees_left += 1
-                continue
+            if idx < len(tree) // 2:
+                # Start with checking left side
+                if visible_left(idx, line):
+                    visible_trees_left += 1
+                    continue
 
-            if visible_right(idx, line):
-                visible_trees_right += 1
-                continue
+                if visible_right(idx, line):
+                    visible_trees_right += 1
+                    continue
+            else:
+                # Start with checking right side
+                if visible_right(idx, line):
+                    visible_trees_right += 1
+                    continue
 
-            if visible_top(idx, line, index, lines):
-                visible_trees_top += 1
-                continue
+                if visible_left(idx, line):
+                    visible_trees_left += 1
+                    continue
 
-            if visible_bottom(idx, line, index, lines):
-                visible_trees_bottom += 1
-                continue
+            if index < len(lines) // 2:
+                # Start with top check
+                if visible_top(idx, line, index, lines):
+                    visible_trees_top += 1
+                    continue
+
+                if visible_bottom(idx, line, index, lines):
+                    visible_trees_bottom += 1
+                    continue
+
+            else:
+                # Start with checking bottom
+                if visible_bottom(idx, line, index, lines):
+                    visible_trees_bottom += 1
+                    continue
+
+                if visible_top(idx, line, index, lines):
+                    visible_trees_top += 1
+                    continue
 
     print(f'Outer trees    = {edge_trees}')
     print(f'visible left   = {visible_trees_left}')
